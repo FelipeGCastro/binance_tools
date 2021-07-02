@@ -1,14 +1,46 @@
 <!doctype html>
 <html style="min-height:auto" >
     <head>
-        <title>chrome-extension-template</title>
+        <title>Binance Tools</title>
         <script src="popup.js"></script>
+        <link rel="stylesheet" href="styles.css">
+        <meta charset="utf-8"/>
     </head>
     <body>
     </body>
     <body>
-        <div>
-            <p>Edit this template!</p>
+        <div class="main-header" >
+            <h3>Binance Tools</h3>
         </div>
+        <div class="main-rows">
+            <h3>Valor Comprado</h3>
+            <div id="update-value-button" >Up</div>
+            <input id="input-price-purchased"  type="number" class="input-box" />
+        </div>
+        <div class="main-rows">
+            <h3>% p/ venda</h3>
+            <input id="input-percent-gain"  type="number" value="0.5" class="input-box" step=".01" />
+        </div>
+        <div class="main-rows">
+            <h3>% Stop Loss</h3>
+            <input id="input-percent-loss"  type="number" value="0.5" class="input-box" step=".01" />
+        </div>
+        <div class="main-rows">
+            <h3>% Stop Limit</h3>
+            <input id="input-percent-limit"  type="number" value="0.7" class="input-box" step=".01" />
+        </div>
+        <div class="main-rows">
+            <h3>Preço</h3>
+            <input id="input-price"  readonly type="number" class="input-box" step=".01" />
+        </div>
+        <div class="main-rows">
+            <h3>Stop</h3>
+            <input id="input-stop"  readonly type="number" class="input-box" step=".01" />
+        </div>
+        <div class="main-rows">
+            <h3>Limit</h3>
+            <input id="input-limit"  readonly type="number" class="input-box" step=".01" />
+        </div>
+        <div id="add-values-in-fields">Adicionar Valores</div>
     </body>
 </html>

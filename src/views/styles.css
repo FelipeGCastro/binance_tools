@@ -1,0 +1,63 @@
+body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    width: 300px;
+}
+.main-header {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(18, 22, 28);
+
+}
+.main-header h3 {
+    color: rgb(240, 185, 11);
+}
+
+.main-rows {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    justify-content: space-between;
+}
+#update-value-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background-color: #001933 ;
+    width: 25px;
+    height: 25px;
+}
+#update-value-button:hover {
+    cursor: pointer;
+}
+.main-rows h3 {
+    color: #333;
+    font-size: 14px;
+    margin: 10px !important;
+}
+.input-box {
+    width: 100px;
+    height: 25px;
+}
+#add-values-in-fields {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    width: 150px;
+    height: 30px;
+    background-color: #1A472A;
+    color: #fff;
+    transition: 200ms;
+}
+#add-values-in-fields:hover {
+    cursor: pointer;
+    opacity: 0.9;
+    transform: translateY(-1px);
+} 

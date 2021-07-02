@@ -16,6 +16,18 @@ body {
 }
 .main-header h3 {
     color: rgb(240, 185, 11);
+    margin: 8px;
+}
+.error-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 20px;
+}
+#errorText {
+    color: red;
+    font-size: 12px;
 }
 
 .main-rows {
@@ -45,6 +57,57 @@ body {
     width: 100px;
     height: 25px;
 }
+.buttonsContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+}
+.addbuttonsContainer {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: flex-start;
+}
+#buttonMinus05 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 25px;
+    color: #fff;
+    background-color: red ;
+    border-radius: 2px;
+    margin-right: 5px;
+    transition: 200ms;
+}
+#buttonMinus05:hover {
+    cursor: pointer;
+}
+#buttonMinus05:active {
+    cursor: pointer;
+    transform: translateY(1px);
+
+}
+#button05 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 25px;
+    color: #fff;
+    background-color: #1A472A ;
+    border-radius: 2px;
+    transition: 200ms;
+}
+#button05:hover {
+    cursor: pointer;
+}
+#button05:active {
+    cursor: pointer;
+    transform: translateY(1px);
+
+}
 #add-values-in-fields {
     display: flex;
     align-items: center;
@@ -55,6 +118,7 @@ body {
     background-color: #1A472A;
     color: #fff;
     transition: 200ms;
+    border-radius: 2px;
 }
 #add-values-in-fields:hover {
     cursor: pointer;

@@ -34,12 +34,23 @@ const formatNumber = function (numberToFormat, step) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.name === 'insertPriceStopAndLimit') {
+    if (!document.getElementById('FormRow-SELL-price') ||
+    !document.getElementById('FormRow-SELL-stopPrice') ||
+    !document.getElementById('FormRow-SELL-stopLimitPrice')) {
+      console.log(document.getElementById('FormRow-SELL-price'), document.getElementById('FormRow-SELL-stopPrice'), document.getElementById('FormRow-SELL-stopLimitPrice'))
+      sendResponse({ error: 'Abre a aba de OCO' })
+      return
+    }
     const step = document.getElementById('FormRow-SELL-price').step
     document.getElementById('FormRow-SELL-price').value = formatNumber(request.price, step)
     document.getElementById('FormRow-SELL-stopPrice').value = formatNumber(request.stopLoss, step)
     document.getElementById('FormRow-SELL-stopLimitPrice').value = formatNumber(request.stopLimit, step)
   }
   if (request.name === 'getBuyPriced') {
+    if (!document.getElementsByClassName('css-1wbviym')[0]) {
+      sendResponse({ error: 'Abre a aba "Histórico de ordens"' })
+      return
+    }
     const dataResponse = {
       buyPrice: document.getElementsByClassName('css-1wbviym')[0].nextSibling.innerText || false
     }

@@ -12,8 +12,24 @@
 
 // Start the popup script, this could be anything from a simple script to a webapp
 const initPopupScript = () => {
+  chrome.storage.sync.get(['inputPricePurchased',
+    'inputPercentGain',
+    'inputPercentLoss',
+    'inputPercentLimit',
+    'inputPrice',
+    'inputStop',
+    'inputLimit'], function (result) {
+    console.log('Value currently is ' + result.key)
+    document.getElementById('input-price-purchased').value = result.inputPricePurchased
+    document.getElementById('input-percent-gain').value = result.inputPercentGain
+    document.getElementById('input-percent-loss').value = result.inputPercentLoss
+    document.getElementById('input-percent-limit').value = result.inputPercentLimit
+    document.getElementById('input-price').value = result.inputPrice
+    document.getElementById('input-stop').value = result.inputStop
+    document.getElementById('input-limit').value = result.inputLimit
+  })
   // Access the background window object
-//   const backgroundWindow = chrome.extension.getBackgroundPage()
+  //   const backgroundWindow = chrome.extension.getBackgroundPage()
   // Do anything with the exposed variables from background.js
 
   // This port enables a long-lived connection to in-content.js
@@ -51,6 +67,12 @@ const initPopupScript = () => {
 
   document.getElementById('add-values-in-fields').addEventListener('click', insertValues)
   document.getElementById('update-value-button').addEventListener('click', uploadBuyPrice)
+  document.getElementById('button05').addEventListener('click', addpercentage)
+  document.getElementById('buttonMinus05').addEventListener('click', addpercentage)
+  document.getElementById('input-price-purchased').addEventListener('change', onChangeInput)
+  document.getElementById('input-percent-gain').addEventListener('change', onChangeInput)
+  document.getElementById('input-percent-loss').addEventListener('change', onChangeInput)
+  document.getElementById('input-percent-limit').addEventListener('change', onChangeInput)
 
   function insertValues () {
     const dataToSend = {
@@ -60,14 +82,14 @@ const initPopupScript = () => {
       stopLimit: document.getElementById('input-limit').value
     }
     chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
-      chrome.tabs.sendMessage(activeTabs[0].id, dataToSend)
+      chrome.tabs.sendMessage(activeTabs[0].id, dataToSend, function (response) {
+        if (response.error) {
+          document.getElementById('errorText').innerHTML = response.error
+          console.log('error ao inserir os valores')
+        }
+      })
     })
   }
-
-  document.getElementById('input-price-purchased').addEventListener('change', onChangeInput)
-  document.getElementById('input-percent-gain').addEventListener('change', onChangeInput)
-  document.getElementById('input-percent-loss').addEventListener('change', onChangeInput)
-  document.getElementById('input-percent-limit').addEventListener('change', onChangeInput)
 
   function uploadBuyPrice () {
     const dataToSend = {
@@ -75,6 +97,15 @@ const initPopupScript = () => {
     }
     chrome.tabs.query({ active: true, currentWindow: true }, function (activeTabs) {
       chrome.tabs.sendMessage(activeTabs[0].id, dataToSend, function (response) {
+        if (!response) {
+          document.getElementById('errorText').value = 'Erro ao se conectar com site da Binance'
+          return
+        }
+        if (response.error) {
+          document.getElementById('errorText').innerHTML = response.error
+          console.log('error ao buscar os valores')
+          return
+        }
         if (response.buyPrice) {
           document.getElementById('input-price-purchased').value = parseFloat(response.buyPrice.replace(/,/g, ''))
           onChangeInput()
@@ -82,16 +113,43 @@ const initPopupScript = () => {
       })
     })
   }
+  function addpercentage () {
+    // console.log(this.id === 'button05') true
+    const isPlus = this.id === 'button05'
+    const percentGain = document.getElementById('input-percent-gain').value
+    const percentLoss = document.getElementById('input-percent-loss').value
+    const percentLimit = document.getElementById('input-percent-limit').value
+    document.getElementById('input-percent-gain').value = isPlus ? (parseFloat(percentGain) + 0.5).toFixed(2) : (parseFloat(percentGain) - 0.5).toFixed(2)
+    document.getElementById('input-percent-loss').value = isPlus ? (parseFloat(percentLoss) - 0.5).toFixed(2) : (parseFloat(percentLoss) + 0.5).toFixed(2)
+    document.getElementById('input-percent-limit').value = isPlus ? (parseFloat(percentLimit) - 0.5).toFixed(2) : (parseFloat(percentLimit) + 0.5).toFixed(2)
+    onChangeInput()
+  }
 
   function onChangeInput () {
     const pricePurchased = document.getElementById('input-price-purchased').value
     const percentGain = document.getElementById('input-percent-gain').value
     const percentLoss = document.getElementById('input-percent-loss').value
     const percentLimit = document.getElementById('input-percent-limit').value
+    const priceValue = (parseFloat(pricePurchased) + (parseFloat(pricePurchased) * (parseFloat(percentGain) / 100))).toFixed(8)
+    const stopValue = (parseFloat(pricePurchased) - (parseFloat(pricePurchased) * (parseFloat(percentLoss) / 100))).toFixed(8)
+    const limitValue = (parseFloat(pricePurchased) - (parseFloat(pricePurchased) * (parseFloat(percentLimit) / 100))).toFixed(8)
     if (!pricePurchased) return
-    document.getElementById('input-price').value = (parseFloat(pricePurchased) + (parseFloat(pricePurchased) * (parseFloat(percentGain) / 100))).toFixed(8)
-    document.getElementById('input-stop').value = (parseFloat(pricePurchased) - (parseFloat(pricePurchased) * (parseFloat(percentLoss) / 100))).toFixed(8)
-    document.getElementById('input-limit').value = (parseFloat(pricePurchased) - (parseFloat(pricePurchased) * (parseFloat(percentLimit) / 100))).toFixed(8)
+    document.getElementById('input-price').value = priceValue
+    document.getElementById('input-stop').value = stopValue
+    document.getElementById('input-limit').value = limitValue
+
+    const dataToStorage = {
+      inputPricePurchased: pricePurchased,
+      inputPercentGain: percentGain,
+      inputPercentLoss: percentLoss,
+      inputPercentLimit: percentLimit,
+      inputPrice: priceValue,
+      inputStop: stopValue,
+      inputLimit: limitValue
+    }
+    chrome.storage.sync.set(dataToStorage, function () {
+      console.log('Save data successfully')
+    })
   }
 }
 
